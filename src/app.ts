@@ -1,0 +1,29 @@
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import cors from 'cors';
+import compression from 'compression'
+import seedRouter from '../src/api/seeding/seedingRoutes';
+import subCatRouter from '../src/api/subCatUpload/subCatRoutes';
+import combinedCategoryRouter from '../src/api/combinedCategory/combinedRoutes';
+import categoryRouter from '../src/api/category/categoryRoutes';
+import queryRouter from '../src/api/queryBuild/queryRoutes';
+
+const app = express();
+const port = 3999;
+
+app.use(express.json());
+app.use(compression());
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
+
+app.use(seedRouter);
+app.use(subCatRouter)
+app.use(combinedCategoryRouter)
+app.use(categoryRouter);
+app.use(queryRouter);
+
+app.listen(port, () => {
+  console.log(`port ${port} running`)
+})

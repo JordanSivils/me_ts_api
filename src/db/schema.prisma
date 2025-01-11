@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  hashedPassword String
+  role           String   @default("user")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  sessions       Session[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeExpires BigInt
+  idleExpires BigInt
+}
+
+model Category {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  combinedCategories CombinedCategory[] // Relation to CombinedCategory
+}
+
+model CombinedCategory {
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  categoryId   Int
+  category     Category      @relation(fields: [categoryId], references: [id])
+  subcategories Subcategory[] // Relation to Subcategory
+}
+
+model Subcategory {
+  id               Int              @id @default(autoincrement())
+  name             String           @unique
+  combinedCategoryId Int
+  combinedCategory CombinedCategory @relation(fields: [combinedCategoryId], references: [id])
+  salesData        SalesData[]
+}
+
+model SalesData {
+  id              Int       @id @default(autoincrement())
+  subcategoryId   Int
+  subcategory     Subcategory? @relation(fields: [subcategoryId], references: [id])
+  year            Int       // e.g., 2024
+  month           Int       // 1-12
+  grossSales      Float
+  discounts       Float
+  netSales        Float
+  extCosts        Float      // External costs
+  profit          Float      // Computed as netSales - extCosts
+  margin          Float      // Profit margin
+  percentNetSales Float      // % of total net sales
+  quantitySold    Int
+}
+
+model UploadLog {
+  id             Int        @id @default(autoincrement())
+  fileName       String     // Name of the uploaded file
+  uploadDate     DateTime   @default(now())
+  recordsImported Int       // Total rows imported
+}
