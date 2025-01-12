@@ -43,8 +43,8 @@ model CombinedCategory {
 model Subcategory {
   id               Int              @id @default(autoincrement())
   name             String           @unique
-  combinedCategoryId Int
-  combinedCategory CombinedCategory @relation(fields: [combinedCategoryId], references: [id])
+  combinedCategoryId Int?
+  combinedCategory CombinedCategory? @relation(fields: [combinedCategoryId], references: [id])
   salesData        SalesData[]
 }
 
