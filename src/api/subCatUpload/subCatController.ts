@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import csv from "csv-parser";
-import { findSubCategoryByName, getAllSubCatData } from "./prismaData/getSubData";
-import { createSubCatData } from "./prismaData/subCatData";
+import { findSubCategoryByName, findSubCategoryWithData, findSubCatWithNullCC, getAllSubCatData } from "./prismaData/getSubData";
+import { createSubCatData, createSubCategory } from "./prismaData/subCatData";
 
 const monthNames: { [key: string]: number } = {
   January: 1,
@@ -30,7 +30,7 @@ export const uploadSales = async (req: Request, res: Response) => {
   const data = req.file;
 
   if (!data) {
-    return; ;
+    return;
   }
 
   const filePath = data.path;
@@ -70,10 +70,12 @@ export const uploadSales = async (req: Request, res: Response) => {
         for (const data of salesData) {
           console.log(`Processing sales data for subcategory: ${data.subCategoryName}`);
 
-          const subCategory = await findSubCategoryByName(data.subCategoryName);
+          let subCategory = await findSubCategoryByName(data.subCategoryName);
 
           if (!subCategory) {
             console.error(`Subcategory "${data.subCategoryName}" not found in the database.`);
+            let subCategory = await createSubCategory(data.subCategoryName);
+
             continue;
           }
 
@@ -115,5 +117,33 @@ export const getSubCategories = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error processing sales CSV:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export const findSubCategory = async (req: Request, res: Response) => {
+  const { name } = req.params
+
+  try {
+    const subCategory = await findSubCategoryWithData(name);
+
+    if (!subCategory) {
+      res.status(404).json({ error: `Subcategory "${name}" not found.` });
+    }
+
+    res.status(200).json(subCategory)
+  } catch (error) {
+    console.error('Error finding subcategory:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export const findNullCC = async (req: Request, res: Response) => {
+  try {
+    const data = await findSubCatWithNullCC()
+
+    res.status(200).json(data)
+  } catch (error) {
+    console.error('Error finding subcategory:', error);
+    res.status(500).json({ error: 'Internal server error' })
   }
 }

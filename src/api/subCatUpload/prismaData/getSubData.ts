@@ -13,6 +13,36 @@ export const findSubCategoryByName = async (name:string) => {
   }
 }
 
+export const findSubCategoryWithData = async (name:string) => {
+  try {
+    const data = await prisma.subcategory.findUnique({
+      where: {
+        name
+      },
+      include: {
+        salesData: true
+      }
+    })
+    return data
+  } catch (error) {
+    console.error("Couldnt find Subcategory by that name.", error)
+  }
+}
+
+export const findSubCatWithNullCC = async () => {
+  try {
+    const data = await prisma.subcategory.findMany({
+      where: {
+        combinedCategoryId: null
+      }
+    })
+
+    return data
+  } catch (error) {
+    console.error("Couldnt find Subcategory by that name.", error)
+  }
+}
+
 export const getAllSubCatData = async (month?: number, year?: number) => {
   try {
     const subData = await prisma.subcategory.findMany({

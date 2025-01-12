@@ -27,3 +27,18 @@ export const createSubCatData = async (data: any) => {
     console.error("Error inserting sales data:", error);
   }
 };
+
+export const createSubCategory = async (name: string) => {
+  try {
+    const newSubCat = await prisma.subcategory.create({
+      data: {
+        name,
+        combinedCategoryId: null
+      }
+    })
+    return newSubCat
+  } catch (error) {
+    console.error("Error creating subcategory:", error);
+    return null;
+  }
+}
