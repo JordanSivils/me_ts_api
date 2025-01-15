@@ -70,3 +70,10 @@ model UploadLog {
   uploadDate     DateTime   @default(now())
   recordsImported Int       // Total rows imported
 }
+
+model Supplier {
+  id Int @id @default(autoincrement())
+  name String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
