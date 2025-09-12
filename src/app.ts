@@ -1,29 +1,31 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
-import cors from 'cors';
-import compression from 'compression'
-import seedRouter from '../src/api/seeding/seedingRoutes';
-import subCatRouter from '../src/api/subCatUpload/subCatRoutes';
-import combinedCategoryRouter from '../src/api/combinedCategory/combinedRoutes';
-import categoryRouter from '../src/api/category/categoryRoutes';
-import queryRouter from '../src/api/queryBuild/queryRoutes';
-import supplierRouter from '../src/api/supplier/supplierRoutes'
+import cors from 'cors'
+import compression from 'compression';
+import dotenv from 'dotenv'
+import v1Router from '../src/api/v1.routes'
+import { clerkMiddleware } from '@clerk/express';
+import { handleError } from './middleware/error/errorHandling';
 
-const app = express();
-const port = 3999;
+const createApp = () => {
+    const app = express();
 
-app.use(express.json());
-app.use(compression());
-app.use(cors());
+    dotenv.config()
+    app.use(clerkMiddleware())
+    app.use(express.json())
+    app.use(cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"]
+    }))
+    app.use(compression())
 
-app.use(seedRouter);
-app.use(subCatRouter)
-app.use(combinedCategoryRouter)
-app.use(categoryRouter);
-app.use(queryRouter);
-app.use(supplierRouter);
+    app.use("/api/v1/", v1Router);
 
-app.listen(port, () => {
-  console.log(`port ${port} running`)
-})
+    app.use(handleError)
+
+    return app
+}
+
+export const app = createApp();
+

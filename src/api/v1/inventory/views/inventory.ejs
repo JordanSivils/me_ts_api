@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./inventory.css">
+    <title>Inventory</title>
+
+    <style>
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead {
+        border-bottom: 1px solid black;
+      }
+      td, th {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid rgb(49, 49, 49);
+      }
+
+    </style>
+
+
+
+
+
+
+
+
+</head>
+<body>
+    <h1 class="title"><%= title %></h1>
+    <p>
+        Supplier: *add body for supplier
+    </p>
+    <p>Date:</p>
+    <p>Name:_______________________</p>
+    <table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Available</th>
+      <th>Count</th>
+      <th>Difference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% rows.forEach(r => { %>
+      <tr>
+        <td><%= r.description %></td>
+        <td class="num"><%= r.available %></td>
+        <td></td>
+        <td></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</body>
+</html>
