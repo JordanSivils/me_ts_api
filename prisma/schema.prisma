@@ -7,11 +7,145 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
-model Supplier {
-  id String @id @default(cuid())
-  name String @unique
+
+model User {
+  id String @id @default(uuid())
+  clerkId String @unique
+  firstName String
+  lastName String
+  email String @unique
+  phoneNumber String
+  supplierDetails SupplierDetails[]
+  // relation with order details: many to one ✅
+  specialOrders SpecialOrder[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Item {
+  id String @id @default(uuid())
+  sku String @unique
+  description String
+  status ItemStatus @default(standard)
+  available Int? 
+  manufacturerId String?
+  manufacturer Manufacturer? @relation(fields: [manufacturerId], references: [id], onDelete: SetNull)
+  suppliers Supplier[]
+  // relation with Supplier: many to many ✅
+  brandId String?
+  brand Brand? @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  // relation with Brand: one to many ✅
+  categoryId String?
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  // relation with Category: one to many ✅
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandId])
+  @@index([categoryId])
+  @@index([manufacturerId])
+  @@index([status])
+}
+
+enum ItemStatus {
+  negative
+  standard
+}
+
+model Supplier {
+  id String @id @default(uuid())
+  name String @unique
+  items Item[]
+  // relation with Item: many to many ✅
+  specialOrders SpecialOrder[]
+  // relation with SpecialOrder: many to one ✅
+  brands Brand[]
+  // relation with brand: many to many ✅
+  supplierDetails SupplierDetails?
+  // relation to SupplierDetails: one to one
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Brand {
+  id String @id @default(uuid())
+  name String @unique
+  items Item[]
+  // relation with Item: many to one ✅
+  specialOrders SpecialOrder[]
+  // relation with specialOrder ✅
+  suppliers Supplier[]
+  // relation with supplier: many to many ✅
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SpecialOrder {
+  id String @id @default(uuid())
+  items Json? 
+  notes String? @db.Text
+  brandId String?
+  brand Brand? @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  // brand relationL: one to many, optional ✅
+  supplierId String
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  // relation with Supplier: one to many ✅
+  orderStatus OrderStatus @default(requested)
+  existingItem Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdById String?
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([supplierId])
+  @@index([brandId])
+  @@index([createdById])
+  @@index([orderStatus])
+}
+
+enum OrderStatus {
+  requested
+  ordered
+  delivered
+  fulfilled
+}
+
+model SupplierDetails {
+  id String @id @default(uuid())
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderDay String?
+  orderNotes String? @db.Text
+  orderMinimum String?
+  // relation with user: one to many ✅
+  supplierId String @unique
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  // relation to Supplier: one to one ✅
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+  items Item[]
+  // relation to Item: many to one ✅
+  // eventual category details for analytics!!
+}
+
+model Manufacturer {
+  id String @id @default(uuid())
+  name String @unique
+  items Item[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -5,7 +5,7 @@ import { getUsers, updateUser } from "./v1/users/user.controller";
 import { validateBody, validateParams, validateQuery } from "../middleware/validation/zodMiddleware";
 import { supplierUploadSchema } from "./v1/supplier/supplier.validation";
 import { memUpload } from "../services/multer";
-import { converExcelToPdf } from "./v1/inventory/iventory.controller";
+import { uploadProducts } from "./v1/item/item.controller";
 
 
 const router = Router();
@@ -20,6 +20,7 @@ router.delete("/supplier/:id", deleteSupplierHandler);
 router.put("/supplier/:id", editSupplierHandler);
 
 
+// file upload for full products
 
-router.post("/inventory", memUpload().single("file"), converExcelToPdf)
+router.post("/upload/products", memUpload().single("file"), uploadProducts)
 export default router;
