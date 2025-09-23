@@ -26,43 +26,76 @@ export async function processTransformedRow(
       sku: transformedRow.sku,
       description: transformedRow.description,
       available: normalizedAvailable,
+      status: (normalizedAvailable && normalizedAvailable < 0 ? "negative" : "standard" ),
       ...(brandName && {
         brand: {
-        connectOrCreate: {
+          connectOrCreate: {
             where: { name: brandName },
             create: { name: brandName },
-        } 
+          } 
       },
       }),
       ...(catName && {
         category: {
-            connectOrCreate: {
-                where: { name: catName },
-                create: { name: catName}
-            }
+          connectOrCreate: {
+            where: { name: catName },
+            create: { name: catName}
+          }
         }
       }),
       ...(supName && {
         suppliers: {
-            connectOrCreate: {
-                where: { name: supName},
-                create: { name: supName}
-            }
+          connectOrCreate: {
+            where: { name: supName},
+            create: { name: supName}
+          }
         }
       }),
       ...(manufName && {
         manufacturer: { 
-            connectOrCreate: {
-                where: { name: manufName},
-                create: { name: manufName }
-            }
+          connectOrCreate: {
+            where: { name: manufName},
+            create: { name: manufName }
+          }
         }
       })
     },
     update: {
       description: transformedRow.description,
       available: normalizedAvailable,
-      
+      status: (normalizedAvailable && normalizedAvailable < 0 ? "negative" : "standard" ),
+      ...(manufName && {
+        manufacturer: { 
+          connectOrCreate: {
+            where: { name: manufName},
+            create: { name: manufName }
+          }
+        }
+      }),
+      ...(supName && {
+        suppliers: {
+          connectOrCreate: {
+            where: { name: supName},
+            create: { name: supName}
+          }
+        }
+      }),
+      ...(catName && {
+        category: {
+          connectOrCreate: {
+            where: { name: catName },
+            create: { name: catName}
+          }
+        }
+      }),
+      ...(brandName && {
+        brand: {
+          connectOrCreate: {
+            where: { name: brandName },
+            create: { name: brandName },
+          } 
+        },
+      })
     },
   });
 }

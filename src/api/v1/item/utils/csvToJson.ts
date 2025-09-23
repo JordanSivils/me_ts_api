@@ -36,5 +36,4 @@ export const csvToJson = (csvFile: string) => {
 
         stream.write(csvFile)
         stream.end()
-        
 }   
