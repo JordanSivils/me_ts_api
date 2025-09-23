@@ -1,5 +1,4 @@
-
-import { NotFoundError } from "../../../middleware/error/errorClasses";
+import { ApiError } from "../../../middleware/error/errorClasses";
 import prisma from "../../../services/prisma"
 
 export const createSuppliers = async (suppliers : {name: string}[]) => {
@@ -13,7 +12,6 @@ export const getAllSuppliers = async () => {
 }
 
 export const getSupplier = async (id: string) => {
-    
     return await prisma.supplier.findUnique({
         where: { id },
     })
@@ -33,7 +31,7 @@ export const deleteSupplier = async (id: string) => {
 export const editSupplier = async (id: string, name:string) => {
     const supplier = await getSupplier(id);
     if (!supplier) {
-        throw new NotFoundError("no supplier found")
+        throw new ApiError(404, "NOT_FOUND", "no supplier found")
     }
 
     return await prisma.supplier.update({

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createSuppliers, deleteSupplier, editSupplier, getAllSuppliers, getSupplier } from "./supplier.repository";
 import { getAuth } from "@clerk/express";
-import { ApiError, NotFoundError } from "../../../middleware/error/errorClasses";
+import { ApiError } from "../../../middleware/error/errorClasses";
 
 export const createSupplierHandler = async (req: Request, res: Response) => {
     const suppliers = req.body;
@@ -37,7 +37,7 @@ export const getSupplierHandler = async (req: Request, res: Response, next: Next
         const supplier = await getSupplier(id)
 
         if (!supplier) {
-            throw new ApiError("no supplier with this id", 400)
+            throw new ApiError(404, "NOT_FOUND" , "no supplier with this id" )
         }
         res.status(200).json(supplier)
     } catch (error) {

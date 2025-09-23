@@ -1,1 +1,0 @@
-CREATE DATABASE me_practice

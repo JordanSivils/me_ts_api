@@ -14,7 +14,7 @@ export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined
 
     if (!file) {
-        throw new ApiError("expected a file", 400)
+        throw new ApiError(400, "FILE_REQUIRED", "expected a file")
     }
     
     const { originalname, mimetype, buffer } = file

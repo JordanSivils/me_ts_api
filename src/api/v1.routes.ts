@@ -23,4 +23,6 @@ router.put("/supplier/:id", editSupplierHandler);
 // file upload for full products
 
 router.post("/upload/products", memUpload().single("file"), uploadProducts)
+
+
 export default router;
