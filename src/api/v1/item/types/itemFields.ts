@@ -21,10 +21,10 @@ export const ItemQuery = z.object({
     limit: LimitAmount,
     cursor: Cursor,
     query: QueryString,
-    sortBy: z.enum(["createdAt", "updatedAt"]).optional().default("createdAt"),
+    sortBy: z.enum(["createdAt"]).optional().default("createdAt"),
     sortDir: z.enum(["asc", "desc"]).optional().default("desc"),
     status: ItemStatusEnum.optional(),
-    manufaturerId: OptionalUuid,
+    manufacturerId: OptionalUuid,
     supplierId: OptionalUuid,
     brandId: OptionalUuid,
     categoryId: OptionalUuid

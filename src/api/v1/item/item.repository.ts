@@ -12,3 +12,7 @@ export const updateItemSatus = async () => {
     })
     return update
 }
+
+export const getAllItems = () => {
+    
+}
