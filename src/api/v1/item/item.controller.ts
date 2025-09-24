@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
+import { ItemQuery } from "./types/itemFields";
+import { getAllItems } from "./item.repository";
 
 export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined
@@ -25,3 +27,22 @@ export const uploadProducts = async (req: Request, res: Response) => {
         console.error(error)
     }
 }
+
+export const getAllItemsHandler = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const items = await getAllItems();
+        
+        res.status(200).json({
+        ok: true,
+        status: 200,
+        message: "Success",
+        data: items
+    })
+    } catch (error) {
+        next(error)
+    }
+    
+
+    
+}
+
