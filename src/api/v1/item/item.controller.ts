@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
-import { ItemQuery } from "./types/itemFields";
+import { ItemQuery, StatusQuery } from "./types/itemFields";
 import { getAllItems } from "./item.repository";
 
 export const uploadProducts = async (req: Request, res: Response) => {
@@ -29,8 +29,10 @@ export const uploadProducts = async (req: Request, res: Response) => {
 }
 
 export const getAllItemsHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const query = ItemQuery.parse(req.query)
+   
     try {
-        const items = await getAllItems();
+        const items = await getAllItems(query);
         
         res.status(200).json({
         ok: true,
@@ -41,8 +43,5 @@ export const getAllItemsHandler = async (req: Request, res: Response, next: Next
     } catch (error) {
         next(error)
     }
-    
-
-    
 }
 

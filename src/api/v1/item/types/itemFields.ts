@@ -1,5 +1,6 @@
 import z from "zod";
 import {  Cursor, ItemStatusEnum, LimitAmount, OptionalInt, OptionalUuid, QueryString, RequiredString, Sku, Uuid } from "../../../../sharedSchemas/globalZodSchemas";
+import { ItemStatus } from "@prisma/client";
 
 export const ItemFields = z.object({
     id: Uuid,
@@ -69,3 +70,7 @@ export const PatchItemBody = z.object({
   categoryId: OptionalUuid,
 }).refine(obj => Object.keys(obj).length > 0, { message: "No fields provided" });
 export type PatchItemBody = z.infer<typeof PatchItemBody>;
+
+export const StatusQuery = z.object({
+  status: z.enum(ItemStatus).optional()
+})

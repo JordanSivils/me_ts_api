@@ -1,3 +1,4 @@
+
 import { ItemStatus } from "@prisma/client"
 import prisma from "../../../services/prisma"
 import { ItemQuery } from "./types/itemFields"
@@ -15,15 +16,17 @@ export const updateItemSatus = async () => {
     return update
 }
 
-export const getAllItems = async () => {
+export const getAllItems = async (q: ItemQuery) => {
+    const where = buildWhere(q)
     return await prisma.item.findMany({
-        skip: 5,
-        take: 1,
-        where: {
-            status: "negative"
-        },
+        where,
+        take: 5,
+        skip: 0,
         orderBy: {
             createdAt: "desc"
+        },
+        include: {
+            suppliers: true
         }
     })
 }

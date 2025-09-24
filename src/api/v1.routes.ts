@@ -6,7 +6,7 @@ import { validateBody, validateParams, validateQuery } from "../middleware/zodMi
 import { memUpload } from "../services/multer";
 import { uploadProducts } from "./v1/item/item.controller";
 import { supplierUploadSchema } from "./v1/supplier/types/supplierTypes";
-
+import itemRouter from "./v1/item/item.routes"
 
 const router = Router();
 
@@ -19,6 +19,7 @@ router.get("/supplier/:id", getSupplierHandler);
 router.delete("/supplier/:id", deleteSupplierHandler);
 router.put("/supplier/:id", editSupplierHandler);
 
+router.use(itemRouter);
 
 // file upload for full products
 
