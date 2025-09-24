@@ -1,4 +1,4 @@
-import { ApiError } from "../../../middleware/error/errorClasses";
+import { ApiError } from "../../../utils/error/errorClasses";
 import prisma from "../../../services/prisma"
 
 export const createSuppliers = async (suppliers : {name: string}[]) => {

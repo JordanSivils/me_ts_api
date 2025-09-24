@@ -1,9 +1,9 @@
 
 import * as csv from 'fast-csv';
-import { ItemRow, TransformedItemRow } from '../validation/itemSchema';
+import { ItemRow, TransformedItemRow } from '../types/itemSchema';
 import { processTransformedRow } from './processRow';
 
-export const csvToJson = (csvFile: string) => {
+export const itemUploadHandler = (csvFile: string) => {
     const stream = csv.parse<ItemRow, TransformedItemRow>({
         headers: headers => headers.map(h => h?.toLowerCase()),
         ignoreEmpty: true

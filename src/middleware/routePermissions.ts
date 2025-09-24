@@ -1,12 +1,6 @@
 import { clerkClient, getAuth } from "@clerk/express";
 import { NextFunction, Request, Response } from "express";
 
-// interface sessionClaims {
-//     metadata: {
-//         role: string
-//     }
-// }
-
 export const clerkUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const  { userId, getToken } = getAuth(req)
 

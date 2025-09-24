@@ -1,14 +1,7 @@
 import { Request, Response } from "express";
-import { ApiError } from "../../../middleware/error/errorClasses";
-import { excelToCsv } from "../../../utils/excel/excelToCsv";
-import { csvToJson } from "./utils/csvToJson";
-
-type Summary = {
-    processed: number
-    created: number
-    updated: number
-    errors: number
-}
+import { ApiError } from "../../../utils/error/errorClasses";
+import { excelToCsv } from "../../../utils/excel/converExcel";
+import { itemUploadHandler } from "./utils/csvToJson";
 
 export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined
@@ -19,15 +12,14 @@ export const uploadProducts = async (req: Request, res: Response) => {
     
     const { originalname, mimetype, buffer } = file
     try {
-       const data = excelToCsv(buffer)
+        const data = excelToCsv(buffer)
 
-       const csvParse = await csvToJson(data)
-       
-       // this is where i want to start to parse via csv function using data as the input.
-       res.status(201).json({
-        ok: true,
-        message: "File Processed Successfully",
-       })
+        const handleCsv = await itemUploadHandler(data)
+
+        res.status(201).json({
+            ok: true,
+            message: "File Processed Successfully",
+        })
         
     } catch (error) {
         console.error(error)

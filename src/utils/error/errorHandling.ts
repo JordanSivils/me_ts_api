@@ -13,7 +13,6 @@ export const handleError = (err: Error, req: Request, res: Response, next: NextF
         return
     }
     
-
     if (err instanceof ZodError) {
         console.log(err);
         res.status(400).json({

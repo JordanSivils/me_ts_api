@@ -1,6 +1,5 @@
 import prisma from "../../../../services/prisma";
-import { TransformedItemRow } from "../validation/itemSchema";
-import { getBrandId, getCategoryId, getManufacturerId, getSupplierId } from "./cacheFk";
+import { TransformedItemRow } from "../types/itemSchema";
 
 export async function processTransformedRow(
   transformedRow: TransformedItemRow

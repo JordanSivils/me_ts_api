@@ -4,7 +4,7 @@ import compression from 'compression';
 import dotenv from 'dotenv'
 import v1Router from '../src/api/v1.routes'
 import { clerkMiddleware } from '@clerk/express';
-import { handleError } from './middleware/error/errorHandling';
+import { handleError } from './utils/error/errorHandling';
 
 const createApp = () => {
     const app = express();
