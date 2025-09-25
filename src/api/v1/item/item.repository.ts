@@ -1,8 +1,10 @@
 
 import { ItemStatus } from "@prisma/client"
 import prisma from "../../../services/prisma"
-import { CreateItemBody, ItemQuery } from "./types/itemFields"
+import { CreateItemBody, ItemQuery, PutItemBody } from "./types/itemFields"
 import { buildWhere } from "./utils/itemQueryOpts"
+import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
+import { ApiError } from "../../../utils/error/errorClasses"
 
 export const updateItemSatus = async () => {
     const update = await prisma.item.updateMany({
@@ -54,12 +56,44 @@ export const createItem = async (b: CreateItemBody) => {
             description: b.description,
             available: b.available ,
             manufacturerId: b.manufacturerId,
-            ...(supplierId && {suppliers: {
-                connect: { id: b.supplierId}
+            ...(supplierId && {
+                suppliers: {
+                    connect: { 
+                        id: b.supplierId
+                    }
             }}),
             
             categoryId: b.categoryId,
             brandId: b.brandId
         }
     })
+}
+
+export const getItem = async (id: IdParams) => {
+    return await prisma.item.findUnique({
+        where: id,
+        include: {
+            suppliers: true
+        }
+    })
+}
+
+export const putItem = async (supId: IdParams, b: PutItemBody) => {
+    const suplierClause = b.supplierId === undefined ?
+    undefined : b.supplierId ? 
+    { set: [{ id: b.supplierId }]} : { set: [] }
+    const item =  await prisma.item.update({
+        where: supId,
+        data: {
+            sku: b.sku,
+            description: b.description ,
+            available: b.available,
+            manufacturerId: b.manufacturerId || null,
+            brandId: b.brandId || null,
+            categoryId: b.categoryId || null,
+            ...(suplierClause && { suppliers: suplierClause } )
+        }
+    })
+    
+    return item
 }

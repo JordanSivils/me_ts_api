@@ -55,6 +55,7 @@ export const PutItemBody = z.object({
   manufacturerId: OptionalUuid,
   brandId: OptionalUuid,
   categoryId: OptionalUuid,
+  supplierId: OptionalUuid
 });
 export type PutItemBody = z.infer<typeof PutItemBody>;
 
@@ -63,11 +64,12 @@ export type PutItemBody = z.infer<typeof PutItemBody>;
 export const PatchItemBody = z.object({
   sku: Sku.optional(),
   description: RequiredString.optional(),
-  available: z.number().int().optional(),
+  available: CoerceOptionalInt,
   status: ItemStatusEnum.optional(),
   manufacturerId: OptionalUuid,
   brandId: OptionalUuid,
   categoryId: OptionalUuid,
+  supplierId: OptionalUuid
 }).refine(obj => Object.keys(obj).length > 0, { message: "No fields provided" });
 export type PatchItemBody = z.infer<typeof PatchItemBody>;
 
