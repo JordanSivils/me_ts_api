@@ -1,5 +1,5 @@
 import z from "zod";
-import {  Cursor, ItemStatusEnum, LimitAmount, OptionalInt, OptionalUuid, QueryString, RequiredString, Sku, Uuid } from "../../../../sharedSchemas/globalZodSchemas";
+import {  CoerceOptionalInt, Cursor, ItemStatusEnum, LimitAmount, OptionalInt, OptionalUuid, QueryString, RequiredString, Sku, Uuid } from "../../../../sharedSchemas/globalZodSchemas";
 import { ItemStatus } from "@prisma/client";
 
 export const ItemFields = z.object({
@@ -19,8 +19,8 @@ export const ItemFields = z.object({
 // for queries item?query=lkajsdfj&
 
 export const ItemQuery = z.object({
-    limit: LimitAmount,
-    cursor: Cursor,
+    page: z.coerce.number().default(1),
+    limit: z.coerce.number().min(1).max(100).default(25),
     query: QueryString,
     sortBy: z.enum(["createdAt"]).optional().default("createdAt"),
     sortDir: z.enum(["asc", "desc"]).optional().default("desc"),
@@ -37,8 +37,8 @@ export type ItemQuery = z.infer<typeof ItemQuery>;
 export const CreateItemBody = z.object({
     sku: Sku,
     description: RequiredString,
-    available: OptionalInt,
-    manufaturerId: OptionalUuid,
+    available: CoerceOptionalInt,
+    manufacturerId: OptionalUuid,
     supplierId: OptionalUuid,
     brandId: OptionalUuid,
     categoryId: OptionalUuid

@@ -7,7 +7,7 @@ export const OptionalUuid = z.string().optional();
 export const RequiredInt = z.number();
 export const OptionalInt = z.number().optional();
 export const CoerceInt = z.coerce.number().int();
-export const CoerceOptionalInt = z.number().optional();
+export const CoerceOptionalInt = z.coerce.number().optional();
 
 // pagination
 export const PageNumber = z.coerce.number().int().min(1).default(1)

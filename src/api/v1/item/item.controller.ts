@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
-import { ItemQuery, StatusQuery } from "./types/itemFields";
-import { getAllItems } from "./item.repository";
+import { CreateItemBody, ItemQuery, StatusQuery } from "./types/itemFields";
+import { createItem, getAllItems } from "./item.repository";
 
 export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined
@@ -45,3 +45,18 @@ export const getAllItemsHandler = async (req: Request, res: Response, next: Next
     }
 }
 
+export const createItemHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const body = CreateItemBody.parse(req.body);
+    try {
+        const item = await createItem(body);
+
+        res.json({
+            ok: true,
+            status: 201,
+            message: "Created Successfully"
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
