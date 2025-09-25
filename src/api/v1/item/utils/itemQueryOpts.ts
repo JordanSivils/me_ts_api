@@ -8,10 +8,12 @@ export const buildWhere = (options: ItemQuery): Prisma.ItemWhereInput => {
         suppliers: options.supplierId ? { some: { id: options.supplierId }} : undefined,
         manufacturerId: options.manufacturerId,
         brandId: options.brandId,
-        
-        OR: [
+        ...(options.query && {
+            OR: [
             { sku: { contains: options.query, mode: "insensitive" as const}},
             { description: { contains: options.query, mode: "insensitive" as const}}
         ]
+        })
+        
     }
 }
