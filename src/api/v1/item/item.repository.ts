@@ -5,6 +5,7 @@ import { CreateItemBody, ItemQuery, PutItemBody } from "./types/itemFields"
 import { buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
 import { ApiError } from "../../../utils/error/errorClasses"
+import { set } from "zod"
 
 export const updateItemSatus = async () => {
     const update = await prisma.item.updateMany({
@@ -88,12 +89,18 @@ export const putItem = async (supId: IdParams, b: PutItemBody) => {
             sku: b.sku,
             description: b.description ,
             available: b.available,
-            manufacturerId: b.manufacturerId || null,
-            brandId: b.brandId || null,
-            categoryId: b.categoryId || null,
-            ...(suplierClause && { suppliers: suplierClause } )
+            manufacturerId: b.manufacturerId,
+            brandId: b.brandId,
+            categoryId: b.categoryId,
+            ...(suplierClause && { suppliers: {
+                set: b.supplierId.map(id => ({ id }))
+            } } )
         }
     })
     
     return item
+}
+
+let idS = {
+    
 }

@@ -55,7 +55,7 @@ export const PutItemBody = z.object({
   manufacturerId: OptionalUuid,
   brandId: OptionalUuid,
   categoryId: OptionalUuid,
-  supplierId: OptionalUuid
+  supplierId: z.array(OptionalUuid)
 });
 export type PutItemBody = z.infer<typeof PutItemBody>;
 
