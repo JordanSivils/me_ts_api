@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { ApiError } from "./errorClasses"
 import { ZodError } from "zod"
+import { Prisma } from "@prisma/client"
 
 export const handleError = (err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof ApiError) {
@@ -14,15 +15,39 @@ export const handleError = (err: Error, req: Request, res: Response, next: NextF
     }
     
     if (err instanceof ZodError) {
-        console.log(err);
-        res.status(400).json({
-            status: "Validation Error",
-              issues: err.issues.map(e => ({
-                field: e.path.join("."),
-                message: e.message
-              }))
-        })
+        const errors = err.issues.map(e => ({
+            ok: false,
+            status: 400,
+            reason: "Validation Error",
+            field: e.path.join("."),
+            message: e.message
+        }))
+        res.status(400).json(
+            errors
+        )
         return
+    }
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        console.log(err);
+        switch(err.code) {
+            case "P2003":
+                res.status(400).json({
+                    ok: false,
+                    status: 400,
+                    reason: err.meta?.field_name,
+                    message: "Foreign key constraint failed."
+                })
+            break;
+
+            case "P2025":
+                res.status(400).json({
+                    ok: false,
+                    status: 404,
+                    reason: err.meta?.cause,
+                    message: "That record could not be found in the Database"
+                })
+        }
+        
     }
 
     console.error("unhandled error", err)

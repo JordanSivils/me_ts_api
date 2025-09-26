@@ -69,7 +69,9 @@ export const PatchItemBody = z.object({
   manufacturerId: OptionalUuid,
   brandId: OptionalUuid,
   categoryId: OptionalUuid,
-  supplierId: OptionalUuid
+  supplierId: z.array(z.uuid())
+    .transform(ids => Array.from(new Set(ids)))
+    .optional()
 }).refine(obj => Object.keys(obj).length > 0, { message: "No fields provided" });
 export type PatchItemBody = z.infer<typeof PatchItemBody>;
 

@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
-import { CreateItemBody, ItemQuery, PutItemBody, StatusQuery } from "./types/itemFields";
-import { createItem, getAllItems, getItem, putItem } from "./item.repository";
+import { CreateItemBody, ItemQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
+import { createItem, getAllItems, getItem, patchItem, putItem } from "./item.repository";
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas";
 import { json } from "body-parser";
 
@@ -85,9 +85,26 @@ export const putItemHandler = async (req: Request, res: Response, next: NextFunc
     try {
         const item = await putItem(id, body)
 
-        res.status(204).json({
+        res.status(200).json({
             ok: true,
-            status: 204,
+            status: 200,
+            message: "Updated Successfully",
+            data: item
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const patchItemHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const id = IdParams.parse(req.params);
+    const body = PatchItemBody.parse(req.body);
+    try {
+        const item = await patchItem(id, body)
+
+        res.json({
+            ok: true,
+            status: 200,
             message: "Updated Successfully",
             data: item
         })

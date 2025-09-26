@@ -1,8 +1,8 @@
 
 import { ItemStatus } from "@prisma/client"
 import prisma from "../../../services/prisma"
-import { CreateItemBody, ItemQuery, PutItemBody } from "./types/itemFields"
-import { buildWhere } from "./utils/itemQueryOpts"
+import { CreateItemBody, ItemQuery, PatchItemBody, PutItemBody } from "./types/itemFields"
+import { buildItemPatch, buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
 import { ApiError } from "../../../utils/error/errorClasses"
 import { set } from "zod"
@@ -89,9 +89,9 @@ export const putItem = async (supId: IdParams, b: PutItemBody) => {
             sku: b.sku,
             description: b.description ,
             available: b.available,
-            manufacturerId: b.manufacturerId,
-            brandId: b.brandId,
-            categoryId: b.categoryId,
+            manufacturerId: b.manufacturerId || null,
+            brandId: b.brandId || null,
+            categoryId: b.categoryId || null,
             ...(suplierClause && { suppliers: {
                 set: b.supplierId.map(id => ({ id }))
             } } )
@@ -101,6 +101,23 @@ export const putItem = async (supId: IdParams, b: PutItemBody) => {
     return item
 }
 
-let idS = {
-    
+export const patchItem = async (id: IdParams, b: PatchItemBody) => {
+    if (b.supplierId !== undefined && b.supplierId.length > 0) {
+        const found = await prisma.supplier.findMany({
+            where: { id: { in: b.supplierId}},
+            select: { id: true }
+        })
+        if (found.length !== b.supplierId.length) {
+      const foundSet = new Set(found.map(f => f.id));
+      const missing = b.supplierId.filter(x => !foundSet.has(x));
+      const err = new Error(`Unknown supplierIds: ${missing.join(", ")}`);
+      (err as any).code = "BAD_SUPPLIERS";
+      throw err;
+    }
+    }
+    const data = buildItemPatch(b);
+    return await prisma.item.update({
+        where: id ,
+        data
+    })
 }
