@@ -13,7 +13,7 @@ const createApp = () => {
     app.use(clerkMiddleware())
     app.use(express.json())
     app.use(cors({
-        origin: "http://localhost:5173",
+        origin: process.env.CORS_URL,
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"]
