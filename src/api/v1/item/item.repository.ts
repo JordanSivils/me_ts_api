@@ -33,8 +33,10 @@ export const getAllItems = async (q: ItemQuery) => {
                 id: "desc"
             }],
             include: {
-                suppliers: true
-            }
+                suppliers: true,
+                category: true
+            },
+        
         }),
         prisma.item.count({ where })
     ]) 
@@ -117,7 +119,7 @@ export const patchItem = async (id: IdParams, b: PatchItemBody) => {
     }
     const data = buildItemPatch(b);
     return await prisma.item.update({
-        where: id ,
+        where: id,
         data
     })
 }
