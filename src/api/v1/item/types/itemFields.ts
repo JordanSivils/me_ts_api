@@ -33,6 +33,12 @@ export const ItemQuery = z.object({
 
 export type ItemQuery = z.infer<typeof ItemQuery>;
 
+export const NegativeQuery = z.object({
+    page: z.coerce.number().default(1),
+    limit: z.coerce.number().min(1).max(100).default(25),
+})
+export type NegativeQuery = z.infer<typeof NegativeQuery>
+
 // create 
 export const CreateItemBody = z.object({
     sku: Sku,
@@ -78,3 +84,4 @@ export type PatchItemBody = z.infer<typeof PatchItemBody>;
 export const StatusQuery = z.object({
   status: z.enum(ItemStatus).optional()
 })
+

@@ -1,5 +1,6 @@
 import { clerkClient, getAuth } from "@clerk/express";
 import { NextFunction, Request, Response } from "express";
+import { ApiError } from "../utils/error/errorClasses";
 
 export const clerkUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const  { userId, getToken } = getAuth(req)
@@ -26,7 +27,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
     console.log("middleware requirAuth() hit")
 
     if(!auth.isAuthenticated || !auth.userId) {
-        return res.status(401).json({ error: "Not signed in" });
+        throw new ApiError(401, "NO_AUTH", "Server did not receive authorized user credentials")
     }
 
     next()

@@ -1,7 +1,7 @@
 
 import { ItemStatus } from "@prisma/client"
 import prisma from "../../../services/prisma"
-import { CreateItemBody, ItemQuery, PatchItemBody, PutItemBody } from "./types/itemFields"
+import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody } from "./types/itemFields"
 import { buildItemPatch, buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
 import { ApiError } from "../../../utils/error/errorClasses"
@@ -40,6 +40,34 @@ export const getAllItems = async (q: ItemQuery) => {
         }),
         prisma.item.count({ where })
     ]) 
+    return {
+        page: q.page,
+        limit: q.limit,
+        total,
+        totalPages: Math.ceil(total / q.limit),
+        previousPage: q.page > 1,
+        nextPage: q.page * q.limit < total,
+        items
+    }
+}
+
+export const getNegativeInventory = async (q: NegativeQuery) => {
+    const skip = (q.page - 1) * q.limit;
+    const [items, total] = await Promise.all([
+        prisma.item.findMany({
+            take: q.limit,
+            skip: skip,
+            where: {
+                status: "negative"
+            }
+
+        }),
+            prisma.item.count({
+                where: {
+                    status: "negative"
+                }
+            })
+        ])
     return {
         page: q.page,
         limit: q.limit,
@@ -123,3 +151,4 @@ export const patchItem = async (id: IdParams, b: PatchItemBody) => {
         data
     })
 }
+

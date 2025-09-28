@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
-import { CreateItemBody, ItemQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
-import { createItem, getAllItems, getItem, patchItem, putItem } from "./item.repository";
+import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
+import { createItem, getAllItems, getItem, getNegativeInventory, patchItem, putItem } from "./item.repository";
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas";
 import { json } from "body-parser";
 
@@ -107,6 +107,22 @@ export const patchItemHandler = async (req: Request, res: Response, next: NextFu
             status: 200,
             message: "Updated Successfully",
             data: item
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getNegativeInventoryHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const q = NegativeQuery.parse(req.query)
+    try {
+        const data = await getNegativeInventory(q);
+
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            message: "Success",
+            data: data
         })
     } catch (error) {
         next(error)
