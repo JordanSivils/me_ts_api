@@ -4,7 +4,7 @@ export const healthCheck = (req: Request, res: Response, next: NextFunction) => 
     try {
         res.status(200).json({
             status: 200,
-            message: "Looks good"
+            message: "Solid"
         })
     } catch (error) {
         next(error)
