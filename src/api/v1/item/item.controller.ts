@@ -5,7 +5,6 @@ import { itemUploadHandler } from "./utils/csvToJson";
 import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
 import { createItem, getAllItems, getItem, getNegativeInventory, patchItem, putItem } from "./item.repository";
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas";
-import { json } from "body-parser";
 
 export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined

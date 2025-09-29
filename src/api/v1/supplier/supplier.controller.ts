@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { createSuppliers, deleteSupplier, editSupplier, getAllSuppliers, getSupplier } from "./supplier.repository";
-import { getAuth } from "@clerk/express";
 import { ApiError } from "../../../utils/error/errorClasses";
 
 export const createSupplierHandler = async (req: Request, res: Response) => {

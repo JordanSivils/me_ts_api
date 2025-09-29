@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import dotenv from 'dotenv'
-import v1Router from '../src/api/v1.routes'
+import v1Router from './api/v1.routes'
 import { clerkMiddleware } from '@clerk/express';
 import { handleError } from './utils/error/errorHandling';
 
