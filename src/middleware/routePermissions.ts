@@ -27,9 +27,8 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
     console.log("middleware requirAuth() hit")
 
     if(!auth.isAuthenticated || !auth.userId) {
-        throw new ApiError(401, "NO_AUTH", "Server did not receive authorized user credentials")
+        return next(new ApiError(401, "NO_AUTH", "Server did not receive authorized user credentials"))
     }
-
     next()
 }
 

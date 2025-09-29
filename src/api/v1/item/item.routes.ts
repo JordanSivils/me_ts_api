@@ -10,7 +10,7 @@ const router = Router();
 
 router.post("/upload/products", memUpload().single("file"), uploadProducts)
 
-router.get("/items", requireAuth, validateQuery(ItemQuery), getAllItemsHandler)
+router.get("/items", requireAuth, validateQuery(ItemQuery), requireAuth, getAllItemsHandler)
 router.get("/item/:id", requireAuth, validateParams(IdParams), getItemHandler)
 router.post("/item", requireAuth, validateBody(CreateItemBody), createItemHandler);
 router.put("/item/:id", requireAuth, validateParams(IdParams), validateBody(PutItemBody), putItemHandler)

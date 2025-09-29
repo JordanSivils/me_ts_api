@@ -4,8 +4,6 @@ import prisma from "../../../services/prisma"
 import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody } from "./types/itemFields"
 import { buildItemPatch, buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
-import { ApiError } from "../../../utils/error/errorClasses"
-import { set } from "zod"
 
 export const updateItemSatus = async () => {
     const update = await prisma.item.updateMany({
