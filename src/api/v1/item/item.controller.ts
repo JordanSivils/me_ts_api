@@ -3,7 +3,7 @@ import { ApiError } from "../../../utils/error/errorClasses";
 import { excelToCsv } from "../../../utils/excel/converExcel";
 import { itemUploadHandler } from "./utils/csvToJson";
 import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
-import { createItem, getAllItems, getItem, getNegativeInventory, patchItem, putItem } from "./item.repository";
+import { createItem, getAllItems, getItem, getNegativeInventory, patchItem, putItem, updateItemSatus } from "./item.repository";
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas";
 
 export const uploadProducts = async (req: Request, res: Response) => {
@@ -15,6 +15,7 @@ export const uploadProducts = async (req: Request, res: Response) => {
     
     const { originalname, mimetype, buffer } = file
     try {
+        await updateItemSatus()
         const data = excelToCsv(buffer)
 
         const handleCsv = await itemUploadHandler(data)
