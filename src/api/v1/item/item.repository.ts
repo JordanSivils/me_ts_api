@@ -57,6 +57,9 @@ export const getNegativeInventory = async (q: NegativeQuery) => {
             skip: skip,
             where: {
                 status: "negative"
+            },
+            orderBy: {
+                available: "asc"
             }
 
         }),
@@ -102,7 +105,10 @@ export const getItem = async (id: IdParams) => {
     return await prisma.item.findUnique({
         where: id,
         include: {
-            suppliers: true
+            suppliers: true,
+            category: true,
+            manufacturer: true,
+            brand: true
         }
     })
 }
