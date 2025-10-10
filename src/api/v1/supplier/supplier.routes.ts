@@ -4,10 +4,10 @@ import { requireAuth } from "../../../middleware/routePermissions";
 
 const router = Router();
 
-router.post("/supplier", requireAuth, createSupplierHandler);
-router.get("/suppliers", getAllSuppliersHandler);
+// router.post("/supplier", requireAuth, createSupplierHandler);
+router.get("/suppliers", requireAuth, getAllSuppliersHandler);
 router.get("/supplier/:id", getSupplierHandler);
-router.delete("/supplier/:id", deleteSupplierHandler);
-router.put("/supplier/:id", editSupplierHandler);
+// router.delete("/supplier/:id", deleteSupplierHandler);
+// router.put("/supplier/:id", editSupplierHandler);
 
-//export default router;
+export default router;

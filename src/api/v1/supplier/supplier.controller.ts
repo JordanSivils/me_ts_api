@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createSuppliers, deleteSupplier, editSupplier, getAllSuppliers, getSupplier } from "./supplier.repository";
 import { ApiError } from "../../../utils/error/errorClasses";
+import { SupplierQuery } from "./types/supplierTypes";
 
 export const createSupplierHandler = async (req: Request, res: Response) => {
     const suppliers = req.body;
@@ -14,19 +15,19 @@ export const createSupplierHandler = async (req: Request, res: Response) => {
     }
 }
 
-export const getAllSuppliersHandler = async (req: Request, res: Response) => {
-    // const { userId }  = getAuth(req);
-    // if (!userId) {
-    //     throw new NotFoundError("No User Found")
-    // }
-    // console.log(userId);
-    
+export const getAllSuppliersHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const q = SupplierQuery.parse(req.query)
     try {
-        const response = await getAllSuppliers();
+        const data = await getAllSuppliers(q);
         // console.log(req.headers.authorization)
-        res.status(200).json(response);
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            message: "Success",
+            data: data
+        });
     } catch (error) {
-        console.log(error)
+        next(error)
     }
 }
 

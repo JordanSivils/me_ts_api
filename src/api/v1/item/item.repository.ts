@@ -61,7 +61,6 @@ export const getNegativeInventory = async (q: NegativeQuery) => {
             orderBy: {
                 available: "asc"
             }
-
         }),
             prisma.item.count({
                 where: {

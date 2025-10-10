@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { ItemQuery, PatchItemBody, PutItemBody } from "../types/itemFields";
+import { ItemQuery, PatchItemBody } from "../types/itemFields";
 
 export const buildWhere = (options: ItemQuery): Prisma.ItemWhereInput => {
     return {
@@ -10,11 +10,10 @@ export const buildWhere = (options: ItemQuery): Prisma.ItemWhereInput => {
         brandId: options.brandId,
         ...(options.query && {
             OR: [
-            { sku: { contains: options.query, mode: "insensitive" as const}},
-            { description: { contains: options.query, mode: "insensitive" as const}}
-        ]
+                { sku: { contains: options.query, mode: "insensitive" as const}},
+                { description: { contains: options.query, mode: "insensitive" as const}}
+            ]
         })
-        
     }
 }
 

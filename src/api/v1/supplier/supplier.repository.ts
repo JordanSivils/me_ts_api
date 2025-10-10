@@ -1,5 +1,6 @@
 import { ApiError } from "../../../utils/error/errorClasses";
 import prisma from "../../../services/prisma"
+import { SupplierQuery } from "./types/supplierTypes";
 
 export const createSuppliers = async (suppliers : {name: string}[]) => {
     return await prisma.supplier.createMany({
@@ -7,10 +8,32 @@ export const createSuppliers = async (suppliers : {name: string}[]) => {
     })
 }
 
-export const getAllSuppliers = async () => {
-    return await prisma.supplier.findMany();
+export const getAllSuppliers = async (q: SupplierQuery) => {
+    const skip = (q.page - 1) * q.limit
+    const [items, total] = await Promise.all([
+        prisma.supplier.findMany({
+            take: q.limit,
+            skip: skip,
+            select: {
+                id: true,
+                name: true,
+                _count: { select: { items: true }}
+            },
+            orderBy: { items: { _count: q.sortDir}}
+        })
+    ,
+        prisma.supplier.count()
+])
+    return {
+        page: q.page,
+        limit: q.limit,
+        total,
+        totalPages: Math.ceil(total / q.limit),
+        previousPage: q.page > 1,
+        nextPage: q.page * q.limit < total,
+        items
+    }
 }
-
 export const getSupplier = async (id: string) => {
     return await prisma.supplier.findUnique({
         where: { id },
