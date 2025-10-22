@@ -8,7 +8,7 @@ import { memUpload } from "../../../services/multer";
 
 const router = Router();
 
-router.post("/upload/products", memUpload().single("file"), uploadProducts)
+router.post("/upload/products", memUpload().single("file"), requireAuth, uploadProducts)
 
 router.get("/items", requireAuth, validateQuery(ItemQuery), requireAuth, getAllItemsHandler)
 router.get("/item/:id", requireAuth, validateParams(IdParams), getItemHandler)

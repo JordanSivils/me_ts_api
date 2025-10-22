@@ -1,34 +1,12 @@
-// export interface ClerkUser {
-//     tokenType: string
-//     actor?: string
-//     sessionClaims?: SessionClaims
-//     sessionId: string
-//     sessionStatus?: string
-//     userId: string
-//     isAuthenticated: boolean
-//     factorVerificationAge?: [number, number]
-//     orgId?: string
-//     orgRole?: string
-//     orgSlug?: string
-//     getToken?: () => Promise<string | null> 
-//     has: (key: string) => boolean
-//     debug: () => void
-// }
+import z from "zod";
+import { RequiredString } from "../../../../sharedSchemas/globalZodSchemas";
 
-// export interface SessionClaims {
-//     metadata: Metadata
-//     azp?: string
-//     exp?: number
-//     fva?: [number, number]
-//     iat?: number
-//     iss?: string
-//     jti?: string
-//     nbf?: number
-//     sid?: string
-//     sub?: string
-//     v?: number
-//  }
+export const UserBodySchema = z.object({
+    clerkId: z.string().min(1),
+    firstName: RequiredString,
+    lastName: RequiredString,
+    email: RequiredString,
+    phoneNumber: RequiredString,
+})
 
-// export interface Metadata {
-//     role?: string
-// }
+export type UserBody = z.infer<typeof UserBodySchema>

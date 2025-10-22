@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { requireAdmin } from "../../../middleware/routePermissions";
-import { getUsers, updateUser } from "./user.controller";
+import { requireAdmin, requireAuth, requireRoles } from "../../../middleware/routePermissions";
+import { createUserHandler, deleteMeUserHandler, getClerkUsers, getMeUserHandler, meUserPatchHandler } from "./user.controller";
 
 const router = Router()
 
-router.put("/user", requireAdmin, updateUser);
-router.get("/user", requireAdmin, getUsers);
+router.get("/users", requireAuth, getClerkUsers);
+router.post("/me/user", requireRoles({ hasAny: ["admin", "manager", "dev", "owner"]}), createUserHandler);
+router.get("/me/user/:id", requireRoles({ hasAny: ["admin", "manager", "dev", "owner"]}),getMeUserHandler);
+router.patch("/me/user/:id", requireRoles({ hasAny: ["admin", "manager", "dev", "owner"]}), meUserPatchHandler);
+router.delete("/me/user/:id", requireRoles({ hasAny: ["admin", "manager", "dev", "owner"]}),deleteMeUserHandler)
+
+export default router;
