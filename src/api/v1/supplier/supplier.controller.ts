@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createSuppliers, deleteSupplier, editSupplier, getAllSuppliers, getSupplier } from "./supplier.repository";
+import { createSuppliers, deleteSupplier, editSupplier, getAllSuppliers, getSupplierById } from "./supplier.repository";
 import { ApiError } from "../../../utils/error/errorClasses";
 import { SupplierQuery } from "./types/supplierTypes";
 
@@ -34,12 +34,17 @@ export const getAllSuppliersHandler = async (req: Request, res: Response, next: 
 export const getSupplierHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
     try {
-        const supplier = await getSupplier(id)
+        const supplier = await getSupplierById(id)
 
         if (!supplier) {
             throw new ApiError(404, "NOT_FOUND" , "no supplier with this id" )
         }
-        res.status(200).json(supplier)
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            message: "Success",
+            data: supplier
+        })
     } catch (error) {
         next(error)
     }

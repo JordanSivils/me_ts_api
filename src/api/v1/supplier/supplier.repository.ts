@@ -34,14 +34,20 @@ export const getAllSuppliers = async (q: SupplierQuery) => {
         items
     }
 }
-export const getSupplier = async (id: string) => {
+export const getSupplierById = async (id: string) => {
     return await prisma.supplier.findUnique({
         where: { id },
+        include: { 
+            supplierDetails: { 
+                include: {
+                    user: true
+                } 
+            }}
     })
 }
 
 export const deleteSupplier = async (id: string) => {
-    const supplier = await getSupplier(id);
+    const supplier = await getSupplierById(id);
     if (!supplier) {
         throw new Error("no supplier found")
     }
@@ -52,7 +58,7 @@ export const deleteSupplier = async (id: string) => {
 }
 
 export const editSupplier = async (id: string, name:string) => {
-    const supplier = await getSupplier(id);
+    const supplier = await getSupplierById(id);
     if (!supplier) {
         throw new ApiError(404, "NOT_FOUND", "no supplier found")
     }

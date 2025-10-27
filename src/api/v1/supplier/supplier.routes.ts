@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { createSupplierHandler, deleteSupplierHandler, editSupplierHandler, getAllSuppliersHandler, getSupplierHandler } from "./supplier.controller";
-import { requireAuth } from "../../../middleware/routePermissions";
+import { requireAuth, requireRoles } from "../../../middleware/routePermissions";
 
 const router = Router();
 
 // router.post("/supplier", requireAuth, createSupplierHandler);
-router.get("/suppliers", requireAuth, getAllSuppliersHandler);
-router.get("/supplier/:id", getSupplierHandler);
+router.get("/suppliers", requireRoles({ hasAny: ["employee"]}), getAllSuppliersHandler);
+router.get("/supplier/:id", requireRoles({ hasAny: ["employee"]}), getSupplierHandler);
 // router.delete("/supplier/:id", deleteSupplierHandler);
 // router.put("/supplier/:id", editSupplierHandler);
 
