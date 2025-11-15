@@ -9,3 +9,4 @@ export const SupplierDetailsBodySchema = z.object({
 });
 export type SupplierDetailsBody = z.infer<typeof SupplierDetailsBodySchema>;
 
+export const SupplierDetailsPut = SupplierDetailsBodySchema.partial();

@@ -26,7 +26,7 @@ export const getAllSuppliersHandler = async (req: Request, res: Response, next: 
             message: "Success",
             data: data
         });
-    } catch (error) {
+    } catch (error: any) {
         next(error)
     }
 }
