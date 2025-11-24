@@ -10,8 +10,10 @@ export const createSuppliers = async (suppliers : {name: string}[]) => {
 
 export const getAllSuppliers = async (q: SupplierQuery) => {
     const skip = (q.page - 1) * q.limit
+
     const [items, total] = await Promise.all([
         prisma.supplier.findMany({
+            where: { name: { contains: q.search, mode: "insensitive"}},
             take: q.limit,
             skip: skip,
             select: {
@@ -19,7 +21,7 @@ export const getAllSuppliers = async (q: SupplierQuery) => {
                 name: true,
                 _count: { select: { items: true }}
             },
-            orderBy: { items: { _count: q.sortDir}}
+            orderBy: { name: "asc"}
         })
     ,
         prisma.supplier.count()
