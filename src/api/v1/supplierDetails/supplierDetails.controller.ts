@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { SupplierDetailsBodySchema } from "./types/supplierDetailsSchema";
-import { createSupplierDetails } from "./supplierDetails.repository";
+import { SupplierDetailsBodySchema, SupplierDetailsPut, SupplierDetailsPutSchema } from "./types/supplierDetailsSchema";
+import { createSupplierDetails, updateSupplierDetails } from "./supplierDetails.repository";
 
 export const createSupplierDetailsHandler = async (req: Request, res: Response, next: NextFunction) => {
     const b = SupplierDetailsBodySchema.parse(req.body);
@@ -14,5 +14,21 @@ export const createSupplierDetailsHandler = async (req: Request, res: Response, 
         })
     } catch (error) {
         next(error);
+    }
+}
+
+export const updateSupplierDetailsHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const b = SupplierDetailsPutSchema.parse(req.body);
+    try {
+        const data = await updateSupplierDetails(id, b);
+        res.status(201).json({
+            ok: true,
+            status: 201,
+            message: "Updated Successfully",
+            data: data
+        })
+    } catch (error) {
+        next(error)
     }
 }
