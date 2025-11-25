@@ -1,4 +1,5 @@
-import prisma from "../../../../services/prisma";
+
+import prisma from "../../../../db/prisma";
 import { TransformedItemRow } from "../types/itemSchema";
 
 export async function processTransformedRow(

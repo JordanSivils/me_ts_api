@@ -1,4 +1,5 @@
-import prisma from "../../../services/prisma"
+
+import prisma from "../../../db/prisma";
 import { SupplierDetailsBody, SupplierDetailsPut } from "./types/supplierDetailsSchema"
 
 export const createSupplierDetails = async (b: SupplierDetailsBody) => {

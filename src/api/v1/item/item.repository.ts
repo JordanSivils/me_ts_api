@@ -1,9 +1,10 @@
 
-import { ItemStatus } from "@prisma/client"
-import prisma from "../../../services/prisma"
 import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody } from "./types/itemFields"
 import { buildItemPatch, buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
+import prisma from "../../../db/prisma"
+import { string } from "zod"
+import { ItemStatus } from "../../../db/client/enums"
 
 export const updateItemSatus = async () => {
     const update = await prisma.item.updateMany({
@@ -136,7 +137,7 @@ export const putItem = async (supId: IdParams, b: PutItemBody) => {
 
 export const patchItem = async (id: IdParams, b: PatchItemBody) => {
     if (b.supplierId !== undefined && b.supplierId.length > 0) {
-        const found = await prisma.supplier.findMany({
+        const found: { id: string}[] = await prisma.supplier.findMany({
             where: { id: { in: b.supplierId}},
             select: { id: true }
         })

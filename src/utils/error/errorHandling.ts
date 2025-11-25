@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { ApiError } from "./errorClasses"
 import { ZodError } from "zod"
-import { Prisma } from "@prisma/client"
+import { Prisma } from "../../db/client/client"
 
 export const handleError = (err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof ApiError) {

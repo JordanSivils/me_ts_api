@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../../../db/client/client";
 import { ItemQuery, PatchItemBody } from "../types/itemFields";
 
 export const buildWhere = (options: ItemQuery): Prisma.ItemWhereInput => {

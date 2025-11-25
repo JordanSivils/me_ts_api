@@ -1,5 +1,5 @@
+import prisma from "../../../db/prisma";
 import { ApiError } from "../../../utils/error/errorClasses";
-import prisma from "../../../services/prisma"
 import { SupplierQuery } from "./types/supplierTypes";
 
 export const createSuppliers = async (suppliers : {name: string}[]) => {

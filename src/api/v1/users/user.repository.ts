@@ -1,8 +1,7 @@
 import { clerkClient } from "@clerk/express";
-import prisma from "../../../services/prisma";
 import { UserBody } from "./types/clerk.types";
 import { UserPatch } from "./types/meUserTypes";
-import { email } from "zod";
+import prisma from "../../../db/prisma";
 
 export const getAllClerkUsers = async () => {
     try {

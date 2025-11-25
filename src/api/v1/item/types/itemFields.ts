@@ -1,6 +1,7 @@
 import z from "zod";
 import {  CoerceOptionalInt, Cursor, ItemStatusEnum, LimitAmount, OptionalInt, OptionalUuid, QueryString, RequiredString, Sku, Uuid } from "../../../../sharedSchemas/globalZodSchemas";
-import { ItemStatus } from "@prisma/client";
+import { ItemStatus } from "../../../../db/client/enums";
+
 
 export const ItemFields = z.object({
     id: Uuid,
