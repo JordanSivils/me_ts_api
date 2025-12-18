@@ -3,7 +3,6 @@ import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody } 
 import { buildItemPatch, buildWhere } from "./utils/itemQueryOpts"
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas"
 import prisma from "../../../db/prisma"
-import { string } from "zod"
 import { ItemStatus } from "../../../db/client/enums"
 
 export const updateItemSatus = async () => {
@@ -27,7 +26,7 @@ export const getAllItems = async (q: ItemQuery) => {
             take: q.limit,
             skip: skip,
             orderBy: [{
-                createdAt: "desc"
+                available: "asc"
             }, {
                 id: "desc"
             }],
@@ -107,7 +106,6 @@ export const getItem = async (id: IdParams) => {
         include: {
             suppliers: true,
             category: true,
-            manufacturer: true,
             brand: true
         }
     })

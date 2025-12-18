@@ -19,7 +19,8 @@ export const getAllSuppliers = async (q: SupplierQuery) => {
             select: {
                 id: true,
                 name: true,
-                _count: { select: { items: true }}
+                _count: { select: { items: true }},
+                supplierDetails: { select: { id: true }}
             },
             orderBy: { name: "asc"}
         })

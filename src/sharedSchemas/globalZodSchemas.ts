@@ -11,7 +11,7 @@ export const CoerceOptionalInt = z.coerce.number().optional();
 
 // pagination
 export const PageNumber = z.coerce.number().int().min(1).default(1)
-export const LimitAmount = z.coerce.number().int().min(1).max(100).default(25)
+export const LimitAmount = z.coerce.number().int().min(1).max(400).default(25)
 export const Cursor = z.string().optional();
 export const QueryString = z.string().min(1).max(100).optional();
 

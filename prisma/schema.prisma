@@ -91,11 +91,16 @@ model SpecialOrder {
   brandId String?
   brand Brand? @relation(fields: [brandId], references: [id], onDelete: SetNull)
   // brand relationL: one to many, optional ✅
-  supplierId String
-  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId String?
+  supplier Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
   // relation with Supplier: one to many ✅
   orderStatus OrderStatus @default(requested)
   existingItem Boolean @default(false)
+
+  recurring Boolean @default(false)
+  orderFrequency Int?
+  initialOrderAt DateTime?
+  nextOrderAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -103,16 +108,17 @@ model SpecialOrder {
   createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([supplierId])
-  @@index([brandId])
-  @@index([createdById])
   @@index([orderStatus])
+  @@index([recurring])
+  @@index([nextOrderAt])
 }
 
 enum OrderStatus {
-  requested
-  ordered
-  delivered
-  fulfilled
+    requested
+    rejected
+    ordered
+    received
+    shorted
 }
 
 model SupplierDetails {

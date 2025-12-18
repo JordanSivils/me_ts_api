@@ -1,10 +1,8 @@
 import { clerkClient } from "@clerk/express";
 import { NextFunction, Request, Response } from "express";
 import { UserBodySchema } from "./types/clerk.types";
-import { createUser, deleteMeUser, getAllClerkUsers, getAllMeUsers, getMeUser, meUserPatch } from "./user.repository";
-import { UserPatchSchema } from "./types/meUserTypes";
-import { da } from "zod/v4/locales/index.cjs";
-
+import { createUser, deleteMeUser, getAllClerkUsers, getAllMeUsers, getAllMeUsersList, getMeUser, meUserPatch } from "./user.repository";
+import { UserListQuerySchema, UserPatchSchema } from "./types/meUserTypes";
 
 export const getClerkUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -104,3 +102,18 @@ export const deleteMeUserHandler = async (req: Request, res: Response, next: Nex
         next(error)
     }
 } 
+
+export const getAllMeUsersListHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const q = UserListQuerySchema.parse(req.query)
+    try {
+        const data = await getAllMeUsersList(q);
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            message: "Success",
+            data: data
+        })
+    } catch (error) {
+        next(error)
+    }
+}

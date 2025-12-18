@@ -21,7 +21,7 @@ export const ItemFields = z.object({
 
 export const ItemQuery = z.object({
     page: z.coerce.number().min(1).default(1),
-    limit: z.coerce.number().min(1).max(100).default(25),
+    limit: z.coerce.number().min(1).max(400).default(25),
     query: QueryString,
     sortBy: z.enum(["createdAt"]).optional().default("createdAt"),
     sortDir: z.enum(["asc", "desc"]).optional().default("desc"),

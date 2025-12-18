@@ -2,12 +2,17 @@ import { Prisma } from "../../../../db/client/client";
 import { ItemQuery, PatchItemBody } from "../types/itemFields";
 
 export const buildWhere = (options: ItemQuery): Prisma.ItemWhereInput => {
+    const handleNull = (value?: string) => {
+        if (value === undefined) return undefined
+        if (value === "null") return null
+        return value
+    }
     return {
         status: options.status,
         categoryId: options.categoryId,
         suppliers: options.supplierId ? { some: { id: options.supplierId }} : undefined,
         manufacturerId: options.manufacturerId,
-        brandId: options.brandId,
+        brandId: handleNull(options.brandId),
         ...(options.query && {
             OR: [
                 { sku: { contains: options.query, mode: "insensitive" as const}},

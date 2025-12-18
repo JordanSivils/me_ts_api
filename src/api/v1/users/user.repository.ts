@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/express";
 import { UserBody } from "./types/clerk.types";
-import { UserPatch } from "./types/meUserTypes";
+import { UserListQuery, UserPatch } from "./types/meUserTypes";
 import prisma from "../../../db/prisma";
 
 export const getAllClerkUsers = async () => {
@@ -69,4 +69,30 @@ export const deleteMeUser = async (id: string) => {
     return await prisma.user.delete({
         where: {id: id}
     })
+}
+
+export const getAllMeUsersList = async (q: UserListQuery) => {
+    const skip = (q.page - 1) * q.limit
+
+    const [items, total] = await Promise.all([
+        prisma.user.findMany({
+            take: q.limit,
+            skip: skip,
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true
+            }
+        }),
+        prisma.user.count()
+    ])
+    return {
+        page: q.page,
+        limit: q.limit,
+        total,
+        totalPages: Math.ceil(total / q.limit),
+        previousPage: q.page > 1,
+        nextPage: q.page * q.limit < total,
+        items
+    }
 }

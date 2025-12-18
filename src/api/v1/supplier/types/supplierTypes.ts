@@ -10,7 +10,7 @@ export type SupplierSchema = z.infer<typeof SupplierSchema>
 
 export const SupplierQuery = z.object({
     page: z.coerce.number().min(1).default(1),
-    limit: z.coerce.number().min(1).max(50).default(25),
+    limit: z.coerce.number().min(1).max(400).default(25),
     sortDir: z.enum(["asc", "desc"]).default("desc"),
     search: z.string().min(1).optional()
 })
