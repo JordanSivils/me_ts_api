@@ -67,7 +67,7 @@ export const getItemHandler = async (req: Request, res: Response, next: NextFunc
     const params = IdParams.parse(req.params);
     try {
         const item = await getItem(params);
-        if (!item) throw new ApiError(404, "NOT_FOUND", "Id Not Found.")
+        if (!item) throw new ApiError(404, "NOT_FOUND", "Id was Not Found.")
         res.status(200).json({
             ok: true,
             status: 200,
