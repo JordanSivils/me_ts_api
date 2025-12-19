@@ -3,7 +3,6 @@ import cors from 'cors'
 import compression from 'compression';
 import dotenv from 'dotenv'
 import v1Router from './api/v1.routes'
-import emailRouter from "./services/email/emailRoutes"
 import { clerkMiddleware } from '@clerk/express';
 import { handleError } from './utils/error/errorHandling';
 
@@ -22,7 +21,6 @@ const createApp = () => {
     app.use(compression())
 
     app.use("/api/v1/", v1Router);
-    app.use("/", emailRouter)
 
     app.use(handleError)
 
