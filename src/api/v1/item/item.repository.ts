@@ -49,36 +49,6 @@ export const getAllItems = async (q: ItemQuery) => {
     }
 }
 
-export const getNegativeInventory = async (q: NegativeQuery) => {
-    const skip = (q.page - 1) * q.limit;
-    const [items, total] = await Promise.all([
-        prisma.item.findMany({
-            take: q.limit,
-            skip: skip,
-            where: {
-                status: "negative"
-            },
-            orderBy: {
-                available: "asc"
-            }
-        }),
-            prisma.item.count({
-                where: {
-                    status: "negative"
-                }
-            })
-        ])
-    return {
-        page: q.page,
-        limit: q.limit,
-        total,
-        totalPages: Math.ceil(total / q.limit),
-        previousPage: q.page > 1,
-        nextPage: q.page * q.limit < total,
-        items
-    }
-}
-
 export const createItem = async (b: CreateItemBody) => {
     const supplierId = b.supplierId
     return await prisma.item.create({
@@ -154,3 +124,10 @@ export const patchItem = async (id: IdParams, b: PatchItemBody) => {
     })
 }
 
+export const getNegativeInventory = async () => {
+    return await prisma.item.findMany({
+        where: {
+            status: "negative"
+        }
+    })
+}

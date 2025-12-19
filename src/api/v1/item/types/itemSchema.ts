@@ -6,7 +6,7 @@ export const ItemRowSchema = z.object({
     cost: z.coerce.number().optional(),
     markup: z.coerce.number().optional(),
     price: z.coerce.number().optional(),
-    available: z.number().int().optional(),
+    available: z.coerce.number().int().nullable(),
     manufacturer: z.string().trim().optional(),
     brand: z.string().trim().optional(),
     category: z.string().trim().optional(),

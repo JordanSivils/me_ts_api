@@ -5,6 +5,7 @@ import { itemUploadHandler } from "./utils/csvToJson";
 import { CreateItemBody, ItemQuery, NegativeQuery, PatchItemBody, PutItemBody, StatusQuery } from "./types/itemFields";
 import { createItem, getAllItems, getItem, getNegativeInventory, patchItem, putItem, updateItemSatus } from "./item.repository";
 import { IdParams } from "../../../sharedSchemas/globalZodSchemas";
+import { sendNegativeMail } from "../../../services/email/emailHTML/negativeInvEmail";
 
 export const uploadProducts = async (req: Request, res: Response) => {
     const file = req.file as Express.Multer.File | undefined
@@ -12,17 +13,21 @@ export const uploadProducts = async (req: Request, res: Response) => {
     if (!file) {
         throw new ApiError(400, "FILE_REQUIRED", "expected a file")
     }
-    
-    const { originalname, mimetype, buffer } = file
+    const { buffer } = file
     try {
         await updateItemSatus()
         const data = excelToCsv(buffer)
 
-        const handleCsv = await itemUploadHandler(data)
+        const rowCount = await itemUploadHandler(data)
+
+        const negatives = await getNegativeInventory();
+        
+
+        await sendNegativeMail(negatives)
 
         res.status(201).json({
             ok: true,
-            message: "File Processed Successfully",
+            message: `Processed (${rowCount} rows)`,
         })
         
     } catch (error) {
@@ -114,9 +119,8 @@ export const patchItemHandler = async (req: Request, res: Response, next: NextFu
 }
 
 export const getNegativeInventoryHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const q = NegativeQuery.parse(req.query)
     try {
-        const data = await getNegativeInventory(q);
+        const data = await getNegativeInventory();
 
         res.status(200).json({
             ok: true,

@@ -3,8 +3,10 @@ import * as csv from 'fast-csv';
 import { ItemRow, TransformedItemRow } from '../types/itemSchema';
 import { processTransformedRow } from './processRow';
 
-export const itemUploadHandler = (csvFile: string) => {
-    const stream = csv.parse<ItemRow, TransformedItemRow>({
+export const itemUploadHandler = (csvFile: string): Promise<number> => {
+    return new Promise((resolve, reject) => {
+
+        const stream = csv.parse<ItemRow, TransformedItemRow>({
         headers: headers => headers.map(h => h?.toLowerCase()),
         ignoreEmpty: true
     })
@@ -25,15 +27,19 @@ export const itemUploadHandler = (csvFile: string) => {
             try {
                 await processTransformedRow(transformedRow);
             } catch (error) {
-                console.error("Row Failed:", error)
+                reject(error)
             } finally {
                 stream.resume();
             }
         })
-        .on('end', (rowCount: number) => console.log(`parse ${rowCount} rows`)
+        .on('end', (rowCount: number) => {
+            resolve(rowCount)
+        }
         
     )
 
         stream.write(csvFile)
         stream.end()
+    })
+    
 }   
